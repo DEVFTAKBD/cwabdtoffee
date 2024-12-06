@@ -1,21 +1,24 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = (req, res) => {
-  const targetUrl = 'https://bdixtv24.site'; // Base URL of the original service
+  // The base URL you want to proxy requests to
+  const target = 'https://bdixtv24.site';  // The source site of the m3u8 link
 
-  // Create the proxy middleware
+  // Set up proxy middleware
   const proxy = createProxyMiddleware({
-    target: targetUrl,
-    changeOrigin: true,
+    target: target,
+    changeOrigin: true,  // This makes the proxy request look like it comes from your Vercel domain
     pathRewrite: {
-      '^/api/proxy': '', // Remove `/api/proxy` from the request path
+      // Remove the /api/proxy part of the URL path to correctly map to the external link
+      '^/api/proxy': '',  // This means the URL will forward directly to the destination
     },
-    onProxyReq: (proxyReq) => {
-      // Add the Referer header
+    onProxyReq: (proxyReq, req, res) => {
+      // Add the necessary headers to the request
       proxyReq.setHeader('Referer', 'https://bdixtv24.site/');
+      proxyReq.setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36');
     },
   });
 
-  // Pass the request to the proxy
-  proxy(req, res);
+  // Use the proxy to forward the request
+  return proxy(req, res);
 };
