@@ -1,9 +1,14 @@
 {
   "name": "toffee-proxy",
   "version": "1.0.0",
-  "description": "Proxy server to add Referer headers for Toffee streams",
+  "description": "Proxy server to add Referer headers for streams",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js"
+  },
   "dependencies": {
     "http-proxy-middleware": "^2.0.6"
   }
 }
+
 
