@@ -1,14 +1,21 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = (req, res) => {
+  const targetUrl = 'https://bdixtv24.site'; // Base URL of the original service
+
+  // Create the proxy middleware
   const proxy = createProxyMiddleware({
-    target: 'https://bdixtv24.site', // The actual target
+    target: targetUrl,
     changeOrigin: true,
-    pathRewrite: { '^/api/proxy': '' }, // Rewrite API route
+    pathRewrite: {
+      '^/api/proxy': '', // Remove `/api/proxy` from the request path
+    },
     onProxyReq: (proxyReq) => {
+      // Add the Referer header
       proxyReq.setHeader('Referer', 'https://bdixtv24.site/');
     },
   });
 
-  return proxy(req, res); // Pass request to proxy
+  // Pass the request to the proxy
+  proxy(req, res);
 };
